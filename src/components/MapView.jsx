@@ -21,8 +21,16 @@ const createClusterCustomIcon = function (cluster) {
 /* =====================
    FIX ICON
    ===================== */
-// Hapus setup default icon yang usang
-// (Tidak dipakai lagi karena kita pakai divIcon)
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconRetina from 'leaflet/dist/images/marker-icon-2x.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: iconRetina,
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+});
 
 /* =====================
    KOMPONEN MARKER PONDOK
@@ -30,24 +38,9 @@ const createClusterCustomIcon = function (cluster) {
 function PondokMarker({ pondok, onSelect }) {
   const map = useMap();
   
-  // Ranting color differentiation logic (Optional styling)
-  const isRanting = pondok.status?.toLowerCase() === 'ranting';
-
-  // We could use custom marker icons based on isRanting here if desired.
-  // For now using the default Leaflet marker with custom tooltip styling.
-
-  // Buat icon kustom modern menggunakan HTML
-  const customIcon = L.divIcon({
-    className: 'bg-transparent border-none', // Hilangkan background default
-    html: `<div class="custom-marker-dot ${isRanting ? 'marker-ranting' : 'marker-non-ranting'}"></div>`,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12], // Center it
-  });
-
   return (
     <Marker
       position={[pondok.lat, pondok.lng]}
-      icon={customIcon}
       eventHandlers={{
         click: () => {
           map.flyTo([pondok.lat, pondok.lng], 16, {
