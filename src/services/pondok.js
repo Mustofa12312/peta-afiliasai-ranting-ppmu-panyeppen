@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 const pondokCol = collection(db, "pondok_pesantren");
@@ -12,6 +12,14 @@ export async function addPondok(data) {
   return await addDoc(pondokCol, {
     ...data,
     createdAt: Date.now(),
+  });
+}
+
+export async function updatePondok(id, data) {
+  const docRef = doc(db, "pondok_pesantren", id);
+  return await updateDoc(docRef, {
+    ...data,
+    updatedAt: Date.now(),
   });
 }
 

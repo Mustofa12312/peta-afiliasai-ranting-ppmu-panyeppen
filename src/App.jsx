@@ -7,6 +7,7 @@ import { Toaster, toast } from "react-hot-toast";
 import MapView from "./components/MapView";
 import DetailSheet from "./components/DetailSheet";
 import AddPondokSheet from "./components/AddPondokSheet";
+import EditPondokSheet from "./components/EditPondokSheet";
 import AdminLoginModal from "./components/AdminLoginModal";
 import BottomNav from "./components/BottomNav";
 
@@ -16,6 +17,7 @@ export default function App() {
 
   const [selectedPondok, setSelectedPondok] = useState(null);
   const [openAdd, setOpenAdd] = useState(false);
+  const [editTarget, setEditTarget] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   // 🔒 Firebase Auth state
@@ -43,7 +45,7 @@ export default function App() {
      🔒 BODY SCROLL LOCK
      ===================== */
   useEffect(() => {
-    if (openAdd || showLoginModal || selectedPondok) {
+    if (openAdd || editTarget || showLoginModal || selectedPondok) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
@@ -51,7 +53,7 @@ export default function App() {
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [openAdd, showLoginModal, selectedPondok]);
+  }, [openAdd, editTarget, showLoginModal, selectedPondok]);
 
   /* =====================
      🔥 LOAD / RELOAD FIRESTORE
@@ -241,6 +243,10 @@ export default function App() {
         pondok={selectedPondok}
         isAdmin={isAdmin}
         onClose={() => setSelectedPondok(null)}
+        onEdit={(p) => {
+          setSelectedPondok(null);
+          setEditTarget(p);
+        }}
         onDeleted={() => {
           setSelectedPondok(null);
           loadPondoks();
@@ -252,6 +258,17 @@ export default function App() {
         open={openAdd}
         onClose={() => setOpenAdd(false)}
         onSaved={loadPondoks}
+      />
+
+      {/* ✏️ EDIT PONDOK */}
+      <EditPondokSheet
+        open={!!editTarget}
+        pondok={editTarget}
+        onClose={() => setEditTarget(null)}
+        onSaved={() => {
+          loadPondoks();
+          setEditTarget(null);
+        }}
       />
 
       {/* 🔐 ADMIN LOGIN MODAL */}

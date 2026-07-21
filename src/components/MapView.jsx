@@ -5,8 +5,18 @@ import {
   Tooltip,
   useMap,
 } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+
+// Custom cluster icon function using the CSS class already in index.css
+const createClusterCustomIcon = function (cluster) {
+  return L.divIcon({
+    html: `<span>${cluster.getChildCount()}</span>`,
+    className: "custom-cluster-icon",
+    iconSize: L.point(48, 48, true),
+  });
+};
 
 /* =====================
    FIX ICON
@@ -103,10 +113,16 @@ export default function MapView({ pondoks, onSelect, gpsPin }) {
         url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
       />
 
-      {/* MARKER PONDOK (TANPA CLUSTER) */}
-      {pondoks.map((p) => (
-        <PondokMarker key={p.id} pondok={p} onSelect={onSelect} />
-      ))}
+      {/* MARKER PONDOK (DENGAN CLUSTER) */}
+      <MarkerClusterGroup
+        chunkedLoading
+        iconCreateFunction={createClusterCustomIcon}
+        maxClusterRadius={60}
+      >
+        {pondoks.map((p) => (
+          <PondokMarker key={p.id} pondok={p} onSelect={onSelect} />
+        ))}
+      </MarkerClusterGroup>
 
       {/* MARKER GPS */}
       {gpsPin && (
