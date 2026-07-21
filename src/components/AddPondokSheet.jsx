@@ -14,6 +14,7 @@ export default function AddPondokSheet({ open, onClose, onSaved }) {
   const [loading, setLoading] = useState(false);
 
   function ambilGPS() {
+    if ("vibrate" in navigator) navigator.vibrate(50);
     if (!navigator.geolocation) {
       toast.error("GPS tidak didukung oleh browser Anda");
       return;
@@ -27,9 +28,13 @@ export default function AddPondokSheet({ open, onClose, onSaved }) {
           lat: p.coords.latitude,
           lng: p.coords.longitude,
         });
+        if ("vibrate" in navigator) navigator.vibrate([50, 50, 50]);
         toast.success("Lokasi terdeteksi", { id: toastId });
       },
-      () => toast.error("Gagal ambil lokasi, pastikan GPS aktif", { id: toastId }),
+      () => {
+        if ("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
+        toast.error("Gagal ambil lokasi, pastikan GPS aktif", { id: toastId });
+      },
       { enableHighAccuracy: true, timeout: 15000 }
     );
   }
@@ -63,6 +68,7 @@ export default function AddPondokSheet({ open, onClose, onSaved }) {
       });
 
       onSaved?.();
+      if ("vibrate" in navigator) navigator.vibrate([50, 100, 50]);
       toast.success("Berhasil menambahkan data pondok!");
 
       // Reset
@@ -125,18 +131,29 @@ export default function AddPondokSheet({ open, onClose, onSaved }) {
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">Foto Lokasi (Opsional)</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file) {
-                  setFoto(file);
-                  setFotoPreview(URL.createObjectURL(file));
-                }
-              }}
-              className="ui-input !mb-0"
-            />
+            <div className="relative">
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                id="file-upload"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setFoto(file);
+                    setFotoPreview(URL.createObjectURL(file));
+                  }
+                }}
+              />
+              <label 
+                htmlFor="file-upload" 
+                className="ui-input !mb-0 flex items-center justify-center gap-2 cursor-pointer hover:bg-gray-100 transition-colors border-dashed border-2"
+              >
+                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                <span className="text-gray-600 font-medium">{foto ? "Ganti Foto" : "Ambil / Pilih Foto"}</span>
+              </label>
+            </div>
           </div>
 
           {fotoPreview && (

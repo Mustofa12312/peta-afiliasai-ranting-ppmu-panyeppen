@@ -1,6 +1,6 @@
 export default function BottomNav({ onAdd, onGPS }) {
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[990] w-full max-w-sm px-4">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[990] w-full max-w-sm px-4 pb-[env(safe-area-inset-bottom)]">
       <div className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-2xl shadow-green-900/10 rounded-3xl p-2 flex gap-2 w-full transition-all">
         <button 
           onClick={onGPS}

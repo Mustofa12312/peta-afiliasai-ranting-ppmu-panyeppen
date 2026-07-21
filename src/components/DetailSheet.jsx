@@ -24,7 +24,7 @@ export default function DetailSheet({ pondok, isAdmin, onClose, onDeleted }) {
     <div className="ui-overlay" onClick={onClose}>
       <div className="ui-sheet !p-0" onClick={(e) => e.stopPropagation()}>
         {/* GAMBAR FULL LEBAR */}
-        <div className="w-full h-64 bg-gray-100 relative rounded-t-3xl sm:rounded-t-3xl overflow-hidden">
+        <div className="w-full h-48 sm:h-64 bg-gray-100 relative rounded-t-3xl sm:rounded-t-3xl overflow-hidden shrink-0">
           {pondok.fotoUrl ? (
             <img
               src={pondok.fotoUrl}
@@ -39,7 +39,7 @@ export default function DetailSheet({ pondok, isAdmin, onClose, onDeleted }) {
           
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 bg-black/50 text-white rounded-full p-2 hover:bg-black/70 transition-colors backdrop-blur-sm"
+            className="absolute top-4 right-4 bg-black/50 text-white rounded-full p-3 hover:bg-black/70 transition-colors backdrop-blur-sm shadow-md"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

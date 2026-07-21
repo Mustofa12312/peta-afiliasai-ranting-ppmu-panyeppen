@@ -40,6 +40,20 @@ export default function App() {
   }, []);
 
   /* =====================
+     🔒 BODY SCROLL LOCK
+     ===================== */
+  useEffect(() => {
+    if (openAdd || showLoginModal || selectedPondok) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [openAdd, showLoginModal, selectedPondok]);
+
+  /* =====================
      🔥 LOAD / RELOAD FIRESTORE
      ===================== */
   const loadPondoks = useCallback(async () => {
@@ -151,7 +165,7 @@ export default function App() {
       />
 
       {/* 🔍 SEARCH BAR FLOATING */}
-      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[990] w-[90%] max-w-md">
+      <div className="fixed top-6 left-4 right-20 md:left-1/2 md:-translate-x-1/2 md:right-auto md:w-[90%] md:max-w-md z-[990] pt-[env(safe-area-inset-top)]">
         <div className="relative shadow-lg rounded-2xl overflow-hidden bg-white/90 backdrop-blur-md border border-gray-200">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
             <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -171,7 +185,7 @@ export default function App() {
       {/* 🔒 ADMIN TOGGLE */}
       <button 
         onClick={handleAdminToggle}
-        className={`fixed top-6 right-6 z-[990] backdrop-blur-md p-3 rounded-xl shadow-lg border transition-all ${
+        className={`fixed top-6 right-4 z-[990] backdrop-blur-md p-3 rounded-xl shadow-lg border transition-all mt-[env(safe-area-inset-top)] ${
           isAdmin 
             ? 'bg-green-50/90 border-green-200 text-green-600 hover:bg-green-100/90' 
             : 'bg-white/90 border-gray-200 text-gray-500 hover:text-green-600'
@@ -189,13 +203,35 @@ export default function App() {
 
       {/* Admin indicator badge */}
       {isAdmin && (
-        <div className="fixed top-[4.5rem] right-6 z-[990]">
+        <div className="fixed top-[4.5rem] right-4 z-[990] mt-[env(safe-area-inset-top)]">
           <span className="inline-flex items-center gap-1.5 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg shadow-green-600/30 animate-pulse">
             <span className="w-2 h-2 bg-white rounded-full"></span>
             Admin Mode
           </span>
         </div>
       )}
+
+      {/* COUNTER & LEGENDA */}
+      <div className="fixed bottom-[100px] left-4 z-[990] flex flex-col gap-2 mb-[env(safe-area-inset-bottom)] pointer-events-none">
+        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-gray-200 text-xs font-bold text-gray-700 w-fit pointer-events-auto flex items-center gap-2">
+          <span className="flex h-2 w-2 relative">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+          </span>
+          {filteredPondoks.length} Pondok
+        </div>
+        
+        <div className="bg-white/90 backdrop-blur-md p-2.5 rounded-xl shadow-lg border border-gray-200 text-xs font-medium text-gray-600 flex flex-col gap-2 w-fit pointer-events-auto">
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-green-500 border border-white shadow-sm ring-1 ring-green-600/20"></div>
+            Non-Ranting
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-amber-500 border border-white shadow-sm ring-1 ring-amber-600/20"></div>
+            Ranting
+          </div>
+        </div>
+      </div>
 
       {/* 🗺️ MAP */}
       <MapView pondoks={filteredPondoks} gpsPin={gpsPin} onSelect={setSelectedPondok} />

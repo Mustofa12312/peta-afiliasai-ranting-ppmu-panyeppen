@@ -30,8 +30,8 @@ function PondokMarker({ pondok, onSelect }) {
   const customIcon = L.divIcon({
     className: 'bg-transparent border-none', // Hilangkan background default
     html: `<div class="custom-marker-dot ${isRanting ? 'marker-ranting' : 'marker-non-ranting'}"></div>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8], // Center it
+    iconSize: [24, 24],
+    iconAnchor: [12, 12], // Center it
   });
 
   return (
@@ -48,7 +48,7 @@ function PondokMarker({ pondok, onSelect }) {
         },
       }}
     >
-      <Tooltip permanent direction="top" offset={[0, -12]} opacity={1} className="glass-tooltip">
+      <Tooltip direction="top" offset={[0, -12]} opacity={1} className="glass-tooltip">
         <div className="flex flex-col items-center gap-2 p-1 min-w-[100px]">
           {pondok.fotoUrl ? (
             <img 
