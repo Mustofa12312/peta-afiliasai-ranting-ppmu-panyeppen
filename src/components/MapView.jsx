@@ -5,7 +5,6 @@ import {
   Tooltip,
   useMap,
 } from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -104,21 +103,10 @@ export default function MapView({ pondoks, onSelect, gpsPin }) {
         url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
       />
 
-      {/* MARKER PONDOK DENGAN CLUSTER */}
-      <MarkerClusterGroup
-        chunkedLoading
-        iconCreateFunction={(cluster) => {
-          return L.divIcon({
-            html: `<div><span>${cluster.getChildCount()}</span></div>`,
-            className: "custom-cluster-icon",
-            iconSize: L.point(40, 40, true),
-          });
-        }}
-      >
-        {pondoks.map((p) => (
-          <PondokMarker key={p.id} pondok={p} onSelect={onSelect} />
-        ))}
-      </MarkerClusterGroup>
+      {/* MARKER PONDOK (TANPA CLUSTER) */}
+      {pondoks.map((p) => (
+        <PondokMarker key={p.id} pondok={p} onSelect={onSelect} />
+      ))}
 
       {/* MARKER GPS */}
       {gpsPin && (

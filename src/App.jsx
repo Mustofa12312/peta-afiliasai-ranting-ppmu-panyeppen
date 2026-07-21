@@ -14,6 +14,7 @@ export default function App() {
   const [selectedPondok, setSelectedPondok] = useState(null);
   const [openAdd, setOpenAdd] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // 📍 GPS pin untuk map
   const [gpsPin, setGpsPin] = useState(null);
@@ -97,6 +98,22 @@ export default function App() {
     p.nama_pengasuh?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  function handleAdminLogin() {
+    if (isAdmin) {
+      setIsAdmin(false);
+      toast.success("Keluar dari Mode Admin");
+      return;
+    }
+    const pin = window.prompt("Masukkan PIN Admin:");
+    const correctPin = import.meta.env.VITE_ADMIN_PIN || "123456";
+    if (pin === correctPin) {
+      setIsAdmin(true);
+      toast.success("Berhasil masuk sebagai Admin!");
+    } else if (pin !== null) {
+      toast.error("PIN Salah!");
+    }
+  }
+
   return (
     <>
       <Toaster 
@@ -130,12 +147,27 @@ export default function App() {
         </div>
       </div>
 
+      {/* 🔒 ADMIN TOGGLE */}
+      <button 
+        onClick={handleAdminLogin}
+        className="fixed top-6 right-6 z-[990] bg-white/90 backdrop-blur-md p-3 rounded-xl shadow-lg border border-gray-200 text-gray-500 hover:text-green-600 transition-colors"
+      >
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {isAdmin ? (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          )}
+        </svg>
+      </button>
+
       {/* 🗺️ MAP */}
       <MapView pondoks={filteredPondoks} gpsPin={gpsPin} onSelect={setSelectedPondok} />
 
       {/* 🖼️ DETAIL */}
       <DetailSheet
         pondok={selectedPondok}
+        isAdmin={isAdmin}
         onClose={() => setSelectedPondok(null)}
         onDeleted={() => {
           setSelectedPondok(null);
