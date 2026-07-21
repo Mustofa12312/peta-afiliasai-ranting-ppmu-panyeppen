@@ -5,18 +5,10 @@ import {
   Tooltip,
   useMap,
 } from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-// Custom cluster icon function using the CSS class already in index.css
-const createClusterCustomIcon = function (cluster) {
-  return L.divIcon({
-    html: `<span>${cluster.getChildCount()}</span>`,
-    className: "custom-cluster-icon",
-    iconSize: L.point(48, 48, true),
-  });
-};
+// Clustering removed as per request
 
 /* =====================
    FIX ICON
@@ -51,24 +43,8 @@ function PondokMarker({ pondok, onSelect }) {
         },
       }}
     >
-      <Tooltip direction="top" offset={[0, -12]} opacity={1} className="glass-tooltip">
-        <div className="flex flex-col items-center gap-2 p-1 min-w-[100px]">
-          {pondok.fotoUrl ? (
-            <img 
-              src={pondok.fotoUrl} 
-              alt="Foto Pondok" 
-              className="w-16 h-16 object-cover rounded-xl shadow-md border-2 border-white"
-            />
-          ) : (
-            <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 shadow-inner">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-            </div>
-          )}
-          <div className="flex flex-col items-center text-center">
-            <span className="font-extrabold text-gray-800 text-sm leading-tight mb-0.5">{pondok.nama_madrasah}</span>
-            <span className="text-[11px] font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{pondok.nama_pengasuh}</span>
-          </div>
-        </div>
+      <Tooltip permanent direction="top" offset={[0, -40]} opacity={1} className="glass-tooltip">
+        <span className="font-extrabold text-gray-800 text-sm">{pondok.nama_madrasah}</span>
       </Tooltip>
     </Marker>
   );
@@ -106,16 +82,10 @@ export default function MapView({ pondoks, onSelect, gpsPin }) {
         url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
       />
 
-      {/* MARKER PONDOK (DENGAN CLUSTER) */}
-      <MarkerClusterGroup
-        chunkedLoading
-        iconCreateFunction={createClusterCustomIcon}
-        maxClusterRadius={60}
-      >
-        {pondoks.map((p) => (
-          <PondokMarker key={p.id} pondok={p} onSelect={onSelect} />
-        ))}
-      </MarkerClusterGroup>
+      {/* MARKER PONDOK (TANPA CLUSTER) */}
+      {pondoks.map((p) => (
+        <PondokMarker key={p.id} pondok={p} onSelect={onSelect} />
+      ))}
 
       {/* MARKER GPS */}
       {gpsPin && (
