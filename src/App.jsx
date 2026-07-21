@@ -1,10 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "./firebase";
 import { fetchPondok } from "./services/pondok";
 import { Toaster, toast } from "react-hot-toast";
 
 import MapView from "./components/MapView";
 import DetailSheet from "./components/DetailSheet";
 import AddPondokSheet from "./components/AddPondokSheet";
+import AdminLoginModal from "./components/AdminLoginModal";
 import BottomNav from "./components/BottomNav";
 
 export default function App() {
@@ -14,10 +17,27 @@ export default function App() {
   const [selectedPondok, setSelectedPondok] = useState(null);
   const [openAdd, setOpenAdd] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isAdmin, setIsAdmin] = useState(false);
+
+  // 🔒 Firebase Auth state
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const isAdmin = !!currentUser;
 
   // 📍 GPS pin untuk map
   const [gpsPin, setGpsPin] = useState(null);
+
+  /* =====================
+     🔐 FIREBASE AUTH LISTENER
+     ===================== */
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   /* =====================
      🔥 LOAD / RELOAD FIRESTORE
@@ -82,9 +102,26 @@ export default function App() {
   }
 
   /* =====================
+     🔒 ADMIN LOGIN / LOGOUT
+     ===================== */
+  async function handleAdminToggle() {
+    if (isAdmin) {
+      try {
+        await signOut(auth);
+        toast.success("Berhasil keluar dari Mode Admin");
+      } catch (err) {
+        console.error("Logout error:", err);
+        toast.error("Gagal logout");
+      }
+      return;
+    }
+    setShowLoginModal(true);
+  }
+
+  /* =====================
      ⏳ LOADING
      ===================== */
-  if (loading) {
+  if (loading || authLoading) {
     return (
       <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-50">
         <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mb-4"></div>
@@ -97,22 +134,6 @@ export default function App() {
     p.nama_madrasah?.toLowerCase().includes(searchQuery.toLowerCase()) || 
     p.nama_pengasuh?.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  function handleAdminLogin() {
-    if (isAdmin) {
-      setIsAdmin(false);
-      toast.success("Keluar dari Mode Admin");
-      return;
-    }
-    const pin = window.prompt("Masukkan PIN Admin:");
-    const correctPin = import.meta.env.VITE_ADMIN_PIN || "123456";
-    if (pin === correctPin) {
-      setIsAdmin(true);
-      toast.success("Berhasil masuk sebagai Admin!");
-    } else if (pin !== null) {
-      toast.error("PIN Salah!");
-    }
-  }
 
   return (
     <>
@@ -149,8 +170,13 @@ export default function App() {
 
       {/* 🔒 ADMIN TOGGLE */}
       <button 
-        onClick={handleAdminLogin}
-        className="fixed top-6 right-6 z-[990] bg-white/90 backdrop-blur-md p-3 rounded-xl shadow-lg border border-gray-200 text-gray-500 hover:text-green-600 transition-colors"
+        onClick={handleAdminToggle}
+        className={`fixed top-6 right-6 z-[990] backdrop-blur-md p-3 rounded-xl shadow-lg border transition-all ${
+          isAdmin 
+            ? 'bg-green-50/90 border-green-200 text-green-600 hover:bg-green-100/90' 
+            : 'bg-white/90 border-gray-200 text-gray-500 hover:text-green-600'
+        }`}
+        title={isAdmin ? `Admin: ${currentUser.email} — Klik untuk logout` : "Login Admin"}
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           {isAdmin ? (
@@ -160,6 +186,16 @@ export default function App() {
           )}
         </svg>
       </button>
+
+      {/* Admin indicator badge */}
+      {isAdmin && (
+        <div className="fixed top-[4.5rem] right-6 z-[990]">
+          <span className="inline-flex items-center gap-1.5 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg shadow-green-600/30 animate-pulse">
+            <span className="w-2 h-2 bg-white rounded-full"></span>
+            Admin Mode
+          </span>
+        </div>
+      )}
 
       {/* 🗺️ MAP */}
       <MapView pondoks={filteredPondoks} gpsPin={gpsPin} onSelect={setSelectedPondok} />
@@ -180,6 +216,12 @@ export default function App() {
         open={openAdd}
         onClose={() => setOpenAdd(false)}
         onSaved={loadPondoks}
+      />
+
+      {/* 🔐 ADMIN LOGIN MODAL */}
+      <AdminLoginModal
+        open={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
       />
 
       {/* 📱 BOTTOM NAV */}

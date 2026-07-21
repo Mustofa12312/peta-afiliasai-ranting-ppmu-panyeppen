@@ -1,0 +1,17 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /pondok_pesantren/{docId} {
+      // Semua orang bisa membaca (peta publik)
+      allow read: if true;
+
+      // Hanya user yang terautentikasi yang boleh create, update, delete
+      allow create, update, delete: if request.auth != null;
+    }
+
+    // Default: deny semua akses ke koleksi lain
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
