@@ -12,12 +12,8 @@ import L from "leaflet";
 /* =====================
    FIX ICON
    ===================== */
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-});
+// Hapus setup default icon yang usang
+// (Tidak dipakai lagi karena kita pakai divIcon)
 
 /* =====================
    KOMPONEN MARKER PONDOK
@@ -31,9 +27,18 @@ function PondokMarker({ pondok, onSelect }) {
   // We could use custom marker icons based on isRanting here if desired.
   // For now using the default Leaflet marker with custom tooltip styling.
 
+  // Buat icon kustom modern menggunakan HTML
+  const customIcon = L.divIcon({
+    className: 'bg-transparent border-none', // Hilangkan background default
+    html: `<div class="custom-marker-dot ${isRanting ? 'marker-ranting' : 'marker-non-ranting'}"></div>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8], // Center it
+  });
+
   return (
     <Marker
       position={[pondok.lat, pondok.lng]}
+      icon={customIcon}
       eventHandlers={{
         click: () => {
           map.flyTo([pondok.lat, pondok.lng], 16, {
@@ -44,10 +49,23 @@ function PondokMarker({ pondok, onSelect }) {
         },
       }}
     >
-      <Tooltip permanent direction="top" offset={[0, -10]} opacity={1} className={`custom-map-tooltip ${isRanting ? 'border-amber-500 text-amber-700' : 'border-green-600 text-green-800'}`}>
-        <div className="flex flex-col items-center">
-          <span className="font-bold">{pondok.nama_madrasah}</span>
-          <span className="text-xs font-normal opacity-80">{pondok.nama_pengasuh}</span>
+      <Tooltip permanent direction="top" offset={[0, -12]} opacity={1} className="glass-tooltip">
+        <div className="flex flex-col items-center gap-2 p-1 min-w-[100px]">
+          {pondok.fotoUrl ? (
+            <img 
+              src={pondok.fotoUrl} 
+              alt="Foto Pondok" 
+              className="w-16 h-16 object-cover rounded-xl shadow-md border-2 border-white"
+            />
+          ) : (
+            <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center text-gray-400 shadow-inner">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            </div>
+          )}
+          <div className="flex flex-col items-center text-center">
+            <span className="font-extrabold text-gray-800 text-sm leading-tight mb-0.5">{pondok.nama_madrasah}</span>
+            <span className="text-[11px] font-medium text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{pondok.nama_pengasuh}</span>
+          </div>
         </div>
       </Tooltip>
     </Marker>
