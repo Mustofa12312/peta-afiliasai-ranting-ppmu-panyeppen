@@ -31,7 +31,7 @@
 
   /* Input form standard */
   .ui-input {
-    @apply w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all outline-none mb-4 text-gray-800;
+    @apply w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0000fe] focus:border-[#0000fe] transition-all outline-none mb-4 text-gray-800;
   }
   
   .ui-select {
@@ -40,7 +40,7 @@
 
   /* Tombol utama */
   .ui-button-primary {
-    @apply w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-green-600/30 transition-all active:scale-95;
+    @apply w-full flex items-center justify-center gap-2 bg-[#0000fe] hover:bg-[#0000d0] text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-[#0000fe]/30 transition-all active:scale-95;
   }
 
   /* Tombol sekunder / hantu */

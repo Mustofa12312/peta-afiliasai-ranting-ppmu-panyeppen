@@ -61,7 +61,7 @@ export default function DetailSheet({ pondok, isAdmin, onClose, onDeleted }) {
               )}
             </div>
             {pondok.status && (
-              <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${isRanting ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-green-50 text-green-700 border-green-200'}`}>
+              <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${isRanting ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-blue-50 text-blue-700 border-blue-200'}`}>
                 {pondok.status}
               </span>
             )}
