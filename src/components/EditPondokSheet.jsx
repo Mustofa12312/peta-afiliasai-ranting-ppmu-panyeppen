@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { updatePondok } from "../services/pondok";
 import { compressImage } from "../utils/compressImage";
 import { uploadToCloudinary } from "../utils/uploadCloudinary";
+import { WILAYAH_OPTIONS } from "../utils/constants";
 import toast from "react-hot-toast";
 
 export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
   const [namaPengasuh, setNamaPengasuh] = useState("");
   const [namaMadrasah, setNamaMadrasah] = useState("");
   const [status, setStatus] = useState("");
+  const [wilayah, setWilayah] = useState("");
   const [foto, setFoto] = useState(null);
   const [fotoPreview, setFotoPreview] = useState(null);
   const [pos, setPos] = useState(null);
@@ -19,6 +21,7 @@ export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
       setNamaPengasuh(pondok.nama_pengasuh || "");
       setNamaMadrasah(pondok.nama_madrasah || "");
       setStatus(pondok.status || "");
+      setWilayah(pondok.wilayah || "");
       setPos({ lat: pondok.lat, lng: pondok.lng });
       setFotoPreview(pondok.fotoUrl || null);
     }
@@ -74,6 +77,7 @@ export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
         nama_pengasuh: namaPengasuh.trim(),
         nama_madrasah: namaMadrasah.trim(),
         status: status || "", 
+        wilayah: wilayah || "",
         lat: pos.lat,
         lng: pos.lng,
         fotoUrl: finalFotoUrl, 
@@ -133,6 +137,20 @@ export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
               <option value="">Pilih Status (Opsional)</option>
               <option value="Ranting">Ranting</option>
               <option value="Non-Ranting">Non-Ranting</option>
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Wilayah (Opsional)</label>
+            <select
+              value={wilayah}
+              onChange={(e) => setWilayah(e.target.value)}
+              className="ui-select !mb-0"
+            >
+              <option value="">Pilih Wilayah (Opsional)</option>
+              {WILAYAH_OPTIONS.map((w) => (
+                <option key={w} value={w}>{w}</option>
+              ))}
             </select>
           </div>
 

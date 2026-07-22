@@ -25,14 +25,30 @@ L.Icon.Default.mergeOptions({
 });
 
 /* =====================
-   KOMPONEN MARKER PONDOK
+   KOMPONEN MARKER PONDOK (Minimalist Dot)
    ===================== */
 function PondokMarker({ pondok, onSelect }) {
   const map = useMap();
+  const isRanting = pondok.status?.toLowerCase() === 'ranting';
   
+  // Custom SVG Pin Icon
+  const customIcon = L.divIcon({
+    className: 'bg-transparent border-none',
+    html: `<div class="relative flex flex-col items-center justify-center group">
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 ${isRanting ? 'text-amber-500' : 'text-[#0000fe]'} drop-shadow-md transition-transform group-hover:scale-110 group-hover:-translate-y-1">
+               <path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+             </svg>
+             <div class="absolute bottom-0 w-3 h-1 ${isRanting ? 'bg-amber-900/30' : 'bg-[#0000fe]/30'} rounded-[100%] blur-[1px]"></div>
+           </div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32], // jangkar di ujung bawah pin
+    tooltipAnchor: [16, -16], // jangkar tooltip di samping tengah pin
+  });
+
   return (
     <Marker
       position={[pondok.lat, pondok.lng]}
+      icon={customIcon}
       eventHandlers={{
         click: () => {
           map.flyTo([pondok.lat, pondok.lng], 16, {
@@ -43,8 +59,8 @@ function PondokMarker({ pondok, onSelect }) {
         },
       }}
     >
-      <Tooltip permanent direction="top" offset={[0, -40]} opacity={1} className="glass-tooltip">
-        <span className="font-extrabold text-gray-800 text-sm">{pondok.nama_madrasah}</span>
+      <Tooltip permanent direction="right" offset={[8, 0]} opacity={1} className="compact-tooltip">
+        <span className="font-semibold">{pondok.nama_madrasah}</span>
       </Tooltip>
     </Marker>
   );

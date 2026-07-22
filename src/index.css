@@ -70,14 +70,14 @@
   }
 }
 
-/* Kustomisasi Tooltip Leaflet (Glassmorphism) */
-.leaflet-tooltip.glass-tooltip {
-  @apply bg-white/90 backdrop-blur-md border border-white/50 text-gray-800 rounded-2xl shadow-xl px-4 py-3 text-sm;
+/* Compact Tooltip (Minimalist Radar Style) */
+.leaflet-tooltip.compact-tooltip {
+  @apply bg-white border-none text-gray-800 rounded-md px-2.5 py-1 text-sm font-semibold tracking-tight shadow-sm;
   white-space: nowrap;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
-.leaflet-tooltip.glass-tooltip::before {
+.leaflet-tooltip.compact-tooltip::before {
   display: none !important; /* Hilangkan panah segitiga bawaan leaflet */
 }
 
