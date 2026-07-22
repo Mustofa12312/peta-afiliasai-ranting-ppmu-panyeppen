@@ -82,20 +82,35 @@ function GPSMarkerUpdater({ gpsPin }) {
 }
 
 /* =====================
+   KOMPONEN UNTUK FLY-TO SEARCH RESULT
+   ===================== */
+function TargetFlyToUpdater({ target }) {
+  const map = useMap();
+  
+  if (target) {
+    map.flyTo([target.lat, target.lng], 16, {
+      animate: true,
+      duration: 1.0
+    });
+  }
+  return null;
+}
+
+/* =====================
    MAP UTAMA
    ===================== */
-export default function MapView({ pondoks, onSelect, gpsPin }) {
+export default function MapView({ pondoks, onSelect, gpsPin, targetFlyTo }) {
   // Center of Madura roughly -7.05, 113.6
   return (
     <MapContainer
-      center={[-7.05, 113.6]}
-      zoom={9}
+      center={[-7.08, 113.4]}
+      zoom={10}
       style={{ height: "100vh", width: "100vw", zIndex: 0 }}
       zoomControl={false}
+      attributionControl={false}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
 
       {/* MARKER PONDOK (TANPA CLUSTER) */}
@@ -114,6 +129,9 @@ export default function MapView({ pondoks, onSelect, gpsPin }) {
           </Marker>
         </>
       )}
+
+      {/* FLY TO TARGET DARI SEARCH */}
+      {targetFlyTo && <TargetFlyToUpdater target={targetFlyTo} />}
     </MapContainer>
   );
 }

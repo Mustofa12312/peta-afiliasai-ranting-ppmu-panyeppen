@@ -21,6 +21,8 @@ export default function App() {
   const [editTarget, setEditTarget] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [openStatistik, setOpenStatistik] = useState(false);
+  const [targetFlyTo, setTargetFlyTo] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   // 🔒 Firebase Auth state
   const [currentUser, setCurrentUser] = useState(null);
@@ -137,13 +139,23 @@ export default function App() {
   }
 
   /* =====================
-     ⏳ LOADING
+     ⏳ LOADING SPLASH SCREEN
      ===================== */
   if (loading || authLoading) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-green-200 border-t-green-600 mb-4"></div>
-        <h2 className="text-xl font-semibold text-gray-700">Memuat Peta Madura...</h2>
+      <div className="h-screen w-screen flex flex-col items-center justify-center bg-gray-50 text-gray-800 relative overflow-hidden">
+        <div className="relative z-10 flex flex-col items-center animate-pulse">
+          <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-2xl border border-gray-100 shadow-[#0000fe]/20">
+            <svg className="w-10 h-10 text-[#0000fe]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+          </div>
+          <h2 className="text-2xl font-extrabold tracking-tight mb-2 text-[#0000fe]">Kursus Tartil Al-Qur'an</h2>
+          <p className="text-sm font-medium text-gray-500 uppercase tracking-widest">Se-Madura</p>
+          <div className="mt-8 flex gap-2">
+            <div className="w-2 h-2 bg-[#0000fe] rounded-full animate-bounce" style={{animationDelay: '0s'}}></div>
+            <div className="w-2 h-2 bg-[#0000fe] rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+            <div className="w-2 h-2 bg-[#0000fe] rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -168,21 +180,61 @@ export default function App() {
         }} 
       />
 
-      {/* 🔍 SEARCH BAR FLOATING */}
-      <div className="fixed top-6 left-4 right-20 md:left-1/2 md:-translate-x-1/2 md:right-auto md:w-[90%] md:max-w-md z-[990] pt-[env(safe-area-inset-top)]">
-        <div className="relative shadow-lg rounded-2xl overflow-hidden bg-white/90 backdrop-blur-md border border-gray-200">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+      {/* 🏷️ BRANDING HEADER (DESKTOP) */}
+      <div className="fixed top-6 left-4 z-[990] pt-[env(safe-area-inset-top)] pointer-events-none hidden md:flex">
+        <div className="bg-white/90 backdrop-blur-md border border-gray-200 shadow-xl rounded-2xl p-3 flex items-center gap-3 pointer-events-auto">
+          <div className="w-10 h-10 bg-gradient-to-br from-[#0000fe] to-blue-400 rounded-xl flex items-center justify-center text-white shadow-inner">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
           </div>
-          <input 
-            type="search" 
-            placeholder="Cari Madrasah atau Pengasuh..." 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full py-4 pl-12 pr-4 bg-transparent outline-none text-gray-800 placeholder-gray-400 font-medium"
-          />
+          <div>
+            <h1 className="text-sm font-extrabold text-gray-800 tracking-tight leading-tight">Kursus Tartil Al-Qur'an</h1>
+            <p className="text-[10px] font-semibold text-[#0000fe] uppercase tracking-wider">Se-Madura</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 🔍 SEARCH BAR FLOATING DENGAN AUTOCOMPLETE */}
+      <div className="fixed top-6 left-4 right-20 md:left-1/2 md:-translate-x-1/2 md:right-auto md:w-[90%] md:max-w-md z-[990] pt-[env(safe-area-inset-top)]">
+        <div className="relative shadow-lg rounded-2xl overflow-visible bg-white/90 backdrop-blur-md border border-gray-200">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input 
+              type="search" 
+              placeholder="Cari Madrasah atau Pengasuh..." 
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setShowDropdown(true);
+              }}
+              onFocus={() => setShowDropdown(true)}
+              className="w-full py-4 pl-12 pr-4 bg-transparent outline-none text-gray-800 placeholder-gray-400 font-medium"
+            />
+          </div>
+          
+          {/* SEARCH DROPDOWN */}
+          {showDropdown && searchQuery && filteredPondoks.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 max-h-60 overflow-y-auto z-[1000] py-2 custom-scrollbar">
+              {filteredPondoks.slice(0, 10).map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => {
+                    setTargetFlyTo(p);
+                    setSelectedPondok(p);
+                    setSearchQuery(p.nama_madrasah);
+                    setShowDropdown(false);
+                  }}
+                  className="w-full text-left px-4 py-3 hover:bg-gray-50 flex flex-col transition-colors border-b border-gray-50 last:border-0"
+                >
+                  <span className="font-bold text-gray-800">{p.nama_madrasah}</span>
+                  <span className="text-xs text-gray-500">{p.nama_pengasuh} • {p.wilayah || 'Belum Diset'}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -248,7 +300,7 @@ export default function App() {
       )}
 
       {/* 🗺️ MAP */}
-      <MapView pondoks={filteredPondoks} gpsPin={gpsPin} onSelect={setSelectedPondok} />
+      <MapView pondoks={filteredPondoks} gpsPin={gpsPin} onSelect={setSelectedPondok} targetFlyTo={targetFlyTo} />
 
       {/* 🖼️ DETAIL */}
       <DetailSheet
