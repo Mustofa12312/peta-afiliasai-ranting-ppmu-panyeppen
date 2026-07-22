@@ -346,6 +346,7 @@ export default function App() {
         open={openStatistik}
         pondoks={pondoks}
         onClose={() => setOpenStatistik(false)}
+        onUpdated={loadPondoks}
       />
 
       {/* 📱 BOTTOM NAV */}

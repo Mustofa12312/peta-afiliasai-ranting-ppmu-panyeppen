@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc, setDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 const pondokCol = collection(db, "pondok_pesantren");
@@ -26,4 +26,12 @@ export async function updatePondok(id, data) {
 export async function deletePondok(id) {
   const docRef = doc(db, "pondok_pesantren", id);
   return await deleteDoc(docRef);
+}
+
+// Untuk fitur restore backup
+export async function restorePondok(id, data) {
+  const docRef = doc(db, "pondok_pesantren", id);
+  // Hapus 'id' dari data mentah sebelum disave ke Firebase
+  const { id: _, ...cleanData } = data;
+  return await setDoc(docRef, cleanData);
 }
