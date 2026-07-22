@@ -215,35 +215,37 @@ export default function App() {
         </div>
       )}
 
-      {/* COUNTER & LEGENDA */}
-      <div className="fixed bottom-[100px] left-4 z-[990] flex flex-col gap-2 mb-[env(safe-area-inset-bottom)] pointer-events-none">
-        <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-gray-200 text-xs font-bold text-gray-700 w-fit pointer-events-auto flex items-center gap-2">
-          <span className="flex h-2 w-2 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-          </span>
-          {filteredPondoks.length} Pondok
-        </div>
-        
-        <div className="bg-white/90 backdrop-blur-md p-2.5 rounded-xl shadow-lg border border-gray-200 text-xs font-medium text-gray-600 flex flex-col gap-2 w-fit pointer-events-auto">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-[#0000fe] border border-white shadow-sm ring-1 ring-[#0000fe]/20"></div>
-            Non-Ranting
+      {/* COUNTER & LEGENDA (Hanya Admin) */}
+      {isAdmin && (
+        <div className="fixed bottom-[100px] left-4 z-[990] flex flex-col gap-2 mb-[env(safe-area-inset-bottom)] pointer-events-none">
+          <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-gray-200 text-xs font-bold text-gray-700 w-fit pointer-events-auto flex items-center gap-2">
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            {filteredPondoks.length} Pondok
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-amber-500 border border-white shadow-sm ring-1 ring-amber-600/20"></div>
-            Ranting
+          
+          <div className="bg-white/90 backdrop-blur-md p-2.5 rounded-xl shadow-lg border border-gray-200 text-xs font-medium text-gray-600 flex flex-col gap-2 w-fit pointer-events-auto">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-[#0000fe] border border-white shadow-sm ring-1 ring-[#0000fe]/20"></div>
+              Non-Ranting
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-amber-500 border border-white shadow-sm ring-1 ring-amber-600/20"></div>
+              Ranting
+            </div>
           </div>
-        </div>
 
-        <button 
-          onClick={() => setOpenStatistik(true)}
-          className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-xl shadow-lg shadow-blue-600/30 text-xs font-bold pointer-events-auto flex items-center justify-center gap-1.5 transition-all"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
-          Statistik Wilayah
-        </button>
-      </div>
+          <button 
+            onClick={() => setOpenStatistik(true)}
+            className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-xl shadow-lg shadow-blue-600/30 text-xs font-bold pointer-events-auto flex items-center justify-center gap-1.5 transition-all"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+            Statistik Wilayah
+          </button>
+        </div>
+      )}
 
       {/* 🗺️ MAP */}
       <MapView pondoks={filteredPondoks} gpsPin={gpsPin} onSelect={setSelectedPondok} />
