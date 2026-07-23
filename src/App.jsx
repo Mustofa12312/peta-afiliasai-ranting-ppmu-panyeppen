@@ -291,6 +291,10 @@ export default function App() {
                 <div className="w-3 h-3 rounded-full bg-amber-500 border border-white shadow-sm ring-1 ring-amber-600/20"></div>
                 Ranting
               </div>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-green-500 border border-white shadow-sm ring-1 ring-green-600/20"></div>
+                PJGT / Guru Tugas
+              </div>
             </div>
 
             <button 

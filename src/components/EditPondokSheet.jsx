@@ -143,18 +143,21 @@ export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
             </select>
           </div>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Status (Opsional)</label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="ui-select !mb-0"
-            >
-              <option value="">Pilih Status (Opsional)</option>
-              <option value="Ranting">Ranting</option>
-              <option value="Non-Ranting">Non-Ranting</option>
-            </select>
-          </div>
+          {/* Tampilkan kolom Status HANYA jika petugas bukan PJGT */}
+          {petugas !== "PJGT atau Guru Tugas" && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Status (Opsional)</label>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="ui-select !mb-0"
+              >
+                <option value="">Pilih Status (Opsional)</option>
+                <option value="Ranting">Ranting</option>
+                <option value="Non-Ranting">Non-Ranting</option>
+              </select>
+            </div>
+          )}
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">Wilayah (Opsional)</label>
