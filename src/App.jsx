@@ -210,44 +210,64 @@ export default function App() {
         }} 
       />
 
-      {/* 🏷️ BRANDING HEADER */}
-      <div className="fixed top-6 left-4 z-[990] pt-[env(safe-area-inset-top)] pointer-events-none flex">
-        <div className="bg-white/90 backdrop-blur-md border border-gray-200 shadow-xl rounded-2xl p-3 flex items-center gap-3 pointer-events-auto">
-          <div className="w-10 h-10 bg-gradient-to-br from-[#0000fe] to-blue-400 rounded-xl flex items-center justify-center text-white shadow-inner">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-          </div>
-          <div>
-            <h1 className="text-sm font-extrabold text-gray-800 tracking-tight leading-tight">Kursus Tartil Al-Qur'an</h1>
-            <p className="text-[10px] font-semibold text-[#0000fe] uppercase tracking-wider">Se-Madura</p>
-          </div>
-        </div>
-      </div>
-
-      {/* 🔍 SEARCH BAR FLOATING DENGAN AUTOCOMPLETE */}
-      <div className="fixed top-[95px] left-4 right-4 md:top-6 md:left-1/2 md:-translate-x-1/2 md:right-auto md:w-[90%] md:max-w-md z-[990] pt-[env(safe-area-inset-top)] transition-all duration-300">
-        <div className="relative shadow-lg rounded-2xl overflow-visible bg-white/90 backdrop-blur-md border border-gray-200">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+      {/* 🔍 UNIFIED HEADER (BRANDING + SEARCH + ADMIN) */}
+      <div className="fixed top-6 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto md:w-[90%] md:max-w-3xl z-[990] pt-[env(safe-area-inset-top)]">
+        <div className="relative shadow-lg rounded-2xl bg-white/90 backdrop-blur-md border border-gray-200">
+          <div className="flex items-center p-1.5 gap-2">
+            {/* LOGO */}
+            <div className="w-10 h-10 bg-gradient-to-br from-[#0000fe] to-blue-400 rounded-xl flex items-center justify-center text-white shrink-0 shadow-inner">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
             </div>
-            <input 
-              type="search" 
-              placeholder="Cari Madrasah atau Pengasuh..." 
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setShowDropdown(true);
-              }}
-              onFocus={() => setShowDropdown(true)}
-              className="w-full py-4 pl-12 pr-4 bg-transparent outline-none text-gray-800 placeholder-gray-400 font-medium"
-            />
+
+            {/* BRANDING TEXT (Hanya di Desktop) */}
+            <div className="hidden md:block shrink-0 border-r border-gray-200 pr-3">
+              <h1 className="text-sm font-extrabold text-gray-800 tracking-tight leading-tight">Kursus Tartil Al-Qur'an</h1>
+              <p className="text-[10px] font-semibold text-[#0000fe] uppercase tracking-wider">Se-Madura</p>
+            </div>
+
+            {/* SEARCH INPUT */}
+            <div className="flex-1 relative flex items-center">
+              <div className="pl-2 pr-2 flex items-center pointer-events-none">
+                 <svg className="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                 </svg>
+              </div>
+              <input 
+                type="search" 
+                placeholder="Cari Madrasah atau Pengasuh..." 
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowDropdown(true);
+                }}
+                onFocus={() => setShowDropdown(true)}
+                className="w-full py-2.5 bg-transparent outline-none text-gray-800 placeholder-gray-400 font-medium text-sm md:text-base"
+              />
+            </div>
+
+            {/* ADMIN TOGGLE */}
+            <button 
+              onClick={handleAdminToggle}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all ${
+                isAdmin 
+                  ? 'bg-green-50 text-green-600 hover:bg-green-100' 
+                  : 'bg-gray-50 text-gray-500 hover:text-green-600 hover:bg-gray-100'
+              }`}
+              title={isAdmin ? `Admin: ${currentUser.email}` : "Login Admin"}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                {isAdmin ? (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                ) : (
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                )}
+              </svg>
+            </button>
           </div>
           
           {/* SEARCH DROPDOWN */}
           {showDropdown && searchQuery && filteredPondoks.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 max-h-60 overflow-y-auto z-[1000] py-2 custom-scrollbar">
+            <div className="absolute top-[calc(100%+8px)] left-0 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100 max-h-60 overflow-y-auto z-[1000] py-2 custom-scrollbar">
               {filteredPondoks.slice(0, 10).map((p) => (
                 <button
                   key={p.id}
@@ -268,28 +288,9 @@ export default function App() {
         </div>
       </div>
 
-      {/* 🔒 ADMIN TOGGLE */}
-      <button 
-        onClick={handleAdminToggle}
-        className={`fixed top-6 right-4 z-[990] backdrop-blur-md p-3 rounded-xl shadow-lg border transition-all mt-[env(safe-area-inset-top)] ${
-          isAdmin 
-            ? 'bg-green-50/90 border-green-200 text-green-600 hover:bg-green-100/90' 
-            : 'bg-white/90 border-gray-200 text-gray-500 hover:text-green-600'
-        }`}
-        title={isAdmin ? `Admin: ${currentUser.email} — Klik untuk logout` : "Login Admin"}
-      >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {isAdmin ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          )}
-        </svg>
-      </button>
-
       {/* Admin indicator badge */}
       {isAdmin && (
-        <div className="fixed top-[4.5rem] right-4 z-[990] mt-[env(safe-area-inset-top)]">
+        <div className="fixed top-20 right-4 z-[990] mt-[env(safe-area-inset-top)]">
           <span className="inline-flex items-center gap-1.5 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg shadow-green-600/30 animate-pulse">
             <span className="w-2 h-2 bg-white rounded-full"></span>
             Admin Mode
@@ -298,7 +299,7 @@ export default function App() {
       )}
 
       {/* COUNTER & LEGENDA */}
-      <div className="fixed bottom-[100px] left-4 z-[990] flex flex-col gap-2 mb-[env(safe-area-inset-bottom)] pointer-events-none">
+      <div className="fixed bottom-[85px] left-4 z-[990] flex flex-col gap-2 mb-[env(safe-area-inset-bottom)] pointer-events-none">
         
         {/* COUNTER (Tampil untuk semua) */}
         <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-lg border border-gray-200 text-xs font-bold text-gray-700 w-fit pointer-events-auto flex items-center gap-2">
