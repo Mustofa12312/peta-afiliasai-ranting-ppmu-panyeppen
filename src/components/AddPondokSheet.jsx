@@ -100,7 +100,7 @@ export default function AddPondokSheet({ open, onClose, onSaved }) {
 
         <form onSubmit={submit}>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Siapa Anda? (Wajib diisi di awal) <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Identitas Pengisi Data (Wajib) <span className="text-red-500">*</span></label>
             <select
               value={petugas}
               onChange={(e) => {

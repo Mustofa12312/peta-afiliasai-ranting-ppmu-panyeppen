@@ -21,7 +21,7 @@ export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
     if (pondok && open) {
       setNamaPengasuh(pondok.nama_pengasuh || "");
       setNamaMadrasah(pondok.nama_madrasah || "");
-      setPetugas(pondok.petugas || "");
+      setPetugas(pondok.petugas || "Panitia Distribusi Undangan"); // Default data lama ke Panitia
       setStatus(pondok.status || "");
       setWilayah(pondok.wilayah || "");
       setPos({ lat: pondok.lat, lng: pondok.lng });
@@ -131,10 +131,15 @@ export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Petugas yang ngisi <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Identitas Pengisi Data <span className="text-red-500">*</span></label>
             <select
               value={petugas}
-              onChange={(e) => setPetugas(e.target.value)}
+              onChange={(e) => {
+                setPetugas(e.target.value);
+                if (e.target.value === "PJGT atau Guru Tugas") {
+                  setStatus("");
+                }
+              }}
               className="ui-select !mb-0"
             >
               <option value="">Pilih Petugas (Wajib)</option>
