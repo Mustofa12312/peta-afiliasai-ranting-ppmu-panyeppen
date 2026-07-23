@@ -14,6 +14,7 @@ import StatistikSheet from "./components/StatistikSheet";
 import TrashSheet from "./components/TrashSheet";
 import SecuritySettingsSheet from "./components/SecuritySettingsSheet";
 import PinUnlockModal from "./components/PinUnlockModal";
+import NearbySheet from "./components/NearbySheet";
 import { subscribeToSecuritySettings } from "./services/settings";
 
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
   const [securityConfig, setSecurityConfig] = useState({ isFormLocked: false, formPin: "" });
   const [targetFlyTo, setTargetFlyTo] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [openNearby, setOpenNearby] = useState(false);
 
   // 🔒 Firebase Auth state
   const [currentUser, setCurrentUser] = useState(null);
@@ -135,6 +137,16 @@ export default function App() {
         maximumAge: 0,
       }
     );
+  }
+
+  /* =====================
+     🎯 NEARBY HANDLER
+     ===================== */
+  function handleNearbyClick() {
+    setOpenNearby(true);
+    if (!gpsPin) {
+      handleGPS();
+    }
   }
 
   /* =====================
@@ -244,6 +256,17 @@ export default function App() {
                 className="w-full py-2.5 bg-transparent outline-none text-gray-800 placeholder-gray-400 font-medium text-sm md:text-base"
               />
             </div>
+
+            {/* TERDEKAT BUTTON */}
+            <button 
+              onClick={handleNearbyClick}
+              className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+              title="Cari Pondok Terdekat"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" />
+              </svg>
+            </button>
 
             {/* ADMIN TOGGLE */}
             <button 
@@ -422,6 +445,18 @@ export default function App() {
         onClose={() => setOpenPinModal(false)}
         expectedPin={securityConfig.formPin}
         onSuccess={handlePinSuccess}
+      />
+
+      {/* 📍 NEARBY SHEET */}
+      <NearbySheet
+        open={openNearby}
+        pondoks={pondoks}
+        gpsPin={gpsPin}
+        onClose={() => setOpenNearby(false)}
+        onSelect={(p) => {
+          setTargetFlyTo(p);
+          setSelectedPondok(p);
+        }}
       />
 
       {/* 📱 BOTTOM NAV */}
