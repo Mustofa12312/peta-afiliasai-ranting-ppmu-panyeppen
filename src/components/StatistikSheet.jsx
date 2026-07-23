@@ -134,19 +134,21 @@ export default function StatistikSheet({ open, pondoks, onClose, onUpdated }) {
           </p>
           
           <ul className="space-y-3">
-            {WILAYAH_OPTIONS.map((wilayah, index) => {
-              const count = stats.counts[wilayah];
-              return (
-                <li key={wilayah} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
-                  <span className="font-medium text-gray-700">
-                    {index + 1}. {wilayah}
-                  </span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-bold ${count > 0 ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-500'}`}>
-                    {count}
-                  </span>
-                </li>
-              );
-            })}
+            {WILAYAH_OPTIONS
+              .filter(wilayah => stats.counts[wilayah] > 0)
+              .map((wilayah, index) => {
+                const count = stats.counts[wilayah];
+                return (
+                  <li key={wilayah} className="flex justify-between items-center p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <span className="font-medium text-gray-700">
+                      {index + 1}. {wilayah}
+                    </span>
+                    <span className="px-3 py-1 rounded-full text-sm font-bold bg-green-100 text-green-700">
+                      {count}
+                    </span>
+                  </li>
+                );
+              })}
             
             {stats.belumDitentukan > 0 && (
               <li className="flex justify-between items-center p-3 bg-red-50 rounded-xl border border-red-100 mt-4">
