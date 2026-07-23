@@ -60,8 +60,8 @@ export default function AddPondokSheet({ open, onClose, onSaved }) {
       }
 
       await addPondok({
-        nama_pengasuh: namaPengasuh.trim(),
-        nama_madrasah: namaMadrasah.trim(),
+        nama_pengasuh: namaPengasuh.trim().toUpperCase(),
+        nama_madrasah: namaMadrasah.trim().toUpperCase(),
         petugas: petugas,
         status: status || "", // Kosong jika tidak dipilih
         lat: pos.lat,
@@ -126,7 +126,7 @@ export default function AddPondokSheet({ open, onClose, onSaved }) {
                   placeholder="Contoh: Madrasah Diniyah Al-Falah"
                   value={namaMadrasah}
                   onChange={(e) => setNamaMadrasah(e.target.value)}
-                  className="ui-input !mb-0"
+                  className="ui-input !mb-0 uppercase"
                 />
               </div>
 
@@ -136,7 +136,7 @@ export default function AddPondokSheet({ open, onClose, onSaved }) {
                   placeholder="Contoh: KH. Ahmad Syafi'i"
                   value={namaPengasuh}
                   onChange={(e) => setNamaPengasuh(e.target.value)}
-                  className="ui-input !mb-0"
+                  className="ui-input !mb-0 uppercase"
                 />
               </div>
 

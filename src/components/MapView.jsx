@@ -72,7 +72,7 @@ function PondokMarker({ pondok, onSelect }) {
       }}
     >
       <Tooltip permanent direction="right" offset={[8, 0]} opacity={1} className="compact-tooltip">
-        <span className="font-semibold">{pondok.nama_madrasah}</span>
+        <span className="font-semibold uppercase">{pondok.nama_madrasah}</span>
       </Tooltip>
     </Marker>
   );

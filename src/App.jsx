@@ -227,7 +227,7 @@ export default function App() {
                     setSearchQuery(p.nama_madrasah);
                     setShowDropdown(false);
                   }}
-                  className="w-full text-left px-4 py-3 hover:bg-gray-50 flex flex-col transition-colors border-b border-gray-50 last:border-0"
+                  className="w-full text-left px-4 py-3 hover:bg-gray-50 flex flex-col transition-colors border-b border-gray-50 last:border-0 uppercase"
                 >
                   <span className="font-bold text-gray-800">{p.nama_madrasah}</span>
                   <span className="text-xs text-gray-500">{p.nama_pengasuh} • {p.wilayah || 'Belum Diset'}</span>

@@ -49,7 +49,7 @@ export default function DetailSheet({ pondok, isAdmin, onClose, onDeleted, onEdi
 
         {/* KONTEN DETAIL */}
         <div className="p-6">
-          <div className="flex justify-between items-start mb-4">
+          <div className="flex justify-between items-start mb-4 uppercase">
             <div>
               <h2 className="text-2xl font-bold text-gray-800">{pondok.nama_madrasah}</h2>
               <p className="text-gray-600 mt-1">Pengasuh: <span className="font-semibold text-gray-800">{pondok.nama_pengasuh}</span></p>
