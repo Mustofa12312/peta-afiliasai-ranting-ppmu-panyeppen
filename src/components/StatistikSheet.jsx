@@ -14,6 +14,8 @@ export default function StatistikSheet({ open, pondoks, onClose, onUpdated }) {
     });
     
     let belumDitentukan = 0;
+    let totalPanitia = 0;
+    let totalPJGT = 0;
 
     pondoks.forEach((p) => {
       const w = p.wilayah;
@@ -22,9 +24,17 @@ export default function StatistikSheet({ open, pondoks, onClose, onUpdated }) {
       } else {
         belumDitentukan++;
       }
+
+      // Hitung berdasarkan petugas (data lama tanpa petugas dianggap Panitia)
+      const petugasVal = p.petugas?.toLowerCase() || "";
+      if (petugasVal.includes("pjgt") || petugasVal.includes("guru tugas")) {
+        totalPJGT++;
+      } else {
+        totalPanitia++;
+      }
     });
 
-    return { counts, belumDitentukan };
+    return { counts, belumDitentukan, totalPanitia, totalPJGT };
   }, [pondoks]);
 
   // Fungsi Ekspor CSV (Excel)
@@ -165,9 +175,22 @@ export default function StatistikSheet({ open, pondoks, onClose, onUpdated }) {
         </div>
         
         <div className="pt-4 border-t border-gray-100 mt-auto shrink-0 bg-white">
-          <div className="flex justify-between items-center font-bold text-lg text-gray-800 p-2 mb-4">
+          <div className="flex justify-between items-center font-bold text-lg text-gray-800 p-2 mb-2">
             <span>Total Keseluruhan:</span>
-            <span className="text-green-600">{pondoks.length}</span>
+            <span className="text-green-600">{pondoks.length} Pondok</span>
+          </div>
+
+          {/* STATISTIK PETUGAS SECTION */}
+          <div className="flex bg-gray-50 border border-gray-200 rounded-xl p-3 mb-4 justify-around items-center">
+            <div className="flex flex-col items-center">
+              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-center">Oleh Panitia</span>
+              <span className="text-lg font-black text-blue-600">{stats.totalPanitia}</span>
+            </div>
+            <div className="w-px h-8 bg-gray-300"></div>
+            <div className="flex flex-col items-center">
+              <span className="text-[10px] text-gray-500 font-bold uppercase tracking-wider text-center">Oleh PJGT</span>
+              <span className="text-lg font-black text-green-600">{stats.totalPJGT}</span>
+            </div>
           </div>
 
           {/* MANAJEMEN DATA SECTION */}
