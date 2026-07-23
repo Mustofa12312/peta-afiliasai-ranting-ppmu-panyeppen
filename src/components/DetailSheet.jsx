@@ -1,7 +1,7 @@
 import { deletePondok } from "../services/pondok";
 import toast from "react-hot-toast";
 
-export default function DetailSheet({ pondok, isAdmin, onClose, onDeleted }) {
+export default function DetailSheet({ pondok, isAdmin, onClose, onDeleted, onEdit }) {
   if (!pondok) return null;
 
   async function handleDelete() {
