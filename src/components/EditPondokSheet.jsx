@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
   const [namaPengasuh, setNamaPengasuh] = useState("");
   const [namaMadrasah, setNamaMadrasah] = useState("");
+  const [petugas, setPetugas] = useState("");
   const [status, setStatus] = useState("");
   const [wilayah, setWilayah] = useState("");
   const [foto, setFoto] = useState(null);
@@ -20,6 +21,7 @@ export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
     if (pondok && open) {
       setNamaPengasuh(pondok.nama_pengasuh || "");
       setNamaMadrasah(pondok.nama_madrasah || "");
+      setPetugas(pondok.petugas || "");
       setStatus(pondok.status || "");
       setWilayah(pondok.wilayah || "");
       setPos({ lat: pondok.lat, lng: pondok.lng });
@@ -56,8 +58,8 @@ export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
   async function submit(e) {
     e.preventDefault();
 
-    if (!namaPengasuh || !namaMadrasah || !pos) {
-      toast.error("Nama Pengasuh, Nama Madrasah, dan lokasi (GPS) wajib diisi!", { duration: 4000 });
+    if (!namaPengasuh || !namaMadrasah || !pos || !petugas) {
+      toast.error("Nama Pengasuh, Nama Madrasah, Petugas, dan lokasi (GPS) wajib diisi!", { duration: 4000 });
       return;
     }
 
@@ -76,6 +78,7 @@ export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
       await updatePondok(pondok.id, {
         nama_pengasuh: namaPengasuh.trim(),
         nama_madrasah: namaMadrasah.trim(),
+        petugas: petugas,
         status: status || "", 
         wilayah: wilayah || "",
         lat: pos.lat,
@@ -125,6 +128,19 @@ export default function EditPondokSheet({ open, pondok, onClose, onSaved }) {
               onChange={(e) => setNamaPengasuh(e.target.value)}
               className="ui-input !mb-0"
             />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Petugas yang ngisi <span className="text-red-500">*</span></label>
+            <select
+              value={petugas}
+              onChange={(e) => setPetugas(e.target.value)}
+              className="ui-select !mb-0"
+            >
+              <option value="">Pilih Petugas (Wajib)</option>
+              <option value="Panitia Distribusi Undangan">Panitia Distribusi Undangan</option>
+              <option value="PJGT atau Guru Tugas">PJGT atau Guru Tugas</option>
+            </select>
           </div>
 
           <div className="mb-4">

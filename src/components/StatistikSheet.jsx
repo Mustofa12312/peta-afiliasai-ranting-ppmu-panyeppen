@@ -32,10 +32,11 @@ export default function StatistikSheet({ open, pondoks, onClose, onUpdated }) {
     if (!pondoks || pondoks.length === 0) return toast.error("Data kosong");
     
     // Header CSV
-    const headers = ["Nama Madrasah", "Nama Pengasuh", "Status", "Wilayah", "Latitude", "Longitude"];
+    const headers = ["Nama Madrasah", "Nama Pengasuh", "Petugas Pengisi", "Status", "Wilayah", "Latitude", "Longitude"];
     const rows = pondoks.map(p => [
       `"${p.nama_madrasah || ''}"`,
       `"${p.nama_pengasuh || ''}"`,
+      `"${p.petugas || ''}"`,
       `"${p.status || ''}"`,
       `"${p.wilayah || ''}"`,
       p.lat || '',
