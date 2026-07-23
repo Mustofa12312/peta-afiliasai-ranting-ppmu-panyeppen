@@ -12,6 +12,9 @@ import AdminLoginModal from "./components/AdminLoginModal";
 import BottomNav from "./components/BottomNav";
 import StatistikSheet from "./components/StatistikSheet";
 import TrashSheet from "./components/TrashSheet";
+import SecuritySettingsSheet from "./components/SecuritySettingsSheet";
+import PinUnlockModal from "./components/PinUnlockModal";
+import { subscribeToSecuritySettings } from "./services/settings";
 
 export default function App() {
   const [pondoks, setPondoks] = useState([]);
@@ -23,6 +26,9 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [openStatistik, setOpenStatistik] = useState(false);
   const [openTrash, setOpenTrash] = useState(false);
+  const [openSecuritySettings, setOpenSecuritySettings] = useState(false);
+  const [openPinModal, setOpenPinModal] = useState(false);
+  const [securityConfig, setSecurityConfig] = useState({ isFormLocked: false, formPin: "" });
   const [targetFlyTo, setTargetFlyTo] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
 
@@ -37,14 +43,22 @@ export default function App() {
   const [gpsPin, setGpsPin] = useState(null);
 
   /* =====================
-     🔐 FIREBASE AUTH LISTENER
+     🔐 FIREBASE AUTH LISTENER & SETTINGS
      ===================== */
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setAuthLoading(false);
     });
-    return () => unsubscribe();
+
+    const unsubscribeSettings = subscribeToSecuritySettings((data) => {
+      setSecurityConfig(data);
+    });
+
+    return () => {
+      unsubscribeAuth();
+      unsubscribeSettings();
+    };
   }, []);
 
   /* =====================
@@ -139,6 +153,20 @@ export default function App() {
     }
     setShowLoginModal(true);
   }
+
+  const handleAddClick = () => {
+    if (!securityConfig.isFormLocked || isAdmin || localStorage.getItem("form_unlocked_session") === "true") {
+      setOpenAdd(true);
+    } else {
+      setOpenPinModal(true);
+    }
+  };
+
+  const handlePinSuccess = () => {
+    localStorage.setItem("form_unlocked_session", "true");
+    setOpenPinModal(false);
+    setOpenAdd(true);
+  };
 
   /* =====================
      ⏳ LOADING SPLASH SCREEN
@@ -313,6 +341,13 @@ export default function App() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
               Tong Sampah
             </button>
+            <button 
+              onClick={() => setOpenSecuritySettings(true)}
+              className="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-xl shadow-lg shadow-indigo-600/30 text-xs font-bold pointer-events-auto flex items-center justify-center gap-1.5 transition-all"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              Keamanan
+            </button>
           </>
         )}
       </div>
@@ -374,8 +409,22 @@ export default function App() {
         onDataChanged={loadPondoks}
       />
 
+      {/* 🔒 PENGATURAN KEAMANAN ADMIN */}
+      <SecuritySettingsSheet
+        open={openSecuritySettings}
+        onClose={() => setOpenSecuritySettings(false)}
+      />
+
+      {/* 🔓 PIN UNLOCK MODAL */}
+      <PinUnlockModal
+        open={openPinModal}
+        onClose={() => setOpenPinModal(false)}
+        expectedPin={securityConfig.formPin}
+        onSuccess={handlePinSuccess}
+      />
+
       {/* 📱 BOTTOM NAV */}
-      <BottomNav onAdd={() => setOpenAdd(true)} onGPS={handleGPS} />
+      <BottomNav onAdd={handleAddClick} onGPS={handleGPS} />
     </>
   );
 }
